@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const { generateToken } = require("../utils/jwt");
 const saltRounds = 10;
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
   const client = await MongoClient();
   await client.connect();
   const db = client.db("UserInfo");
