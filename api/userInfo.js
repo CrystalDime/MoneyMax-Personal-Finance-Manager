@@ -1,4 +1,4 @@
-const MongoClient = require("../mongo/client");
+const MongoClient = require("../mongo/client.js");
 const { ObjectId } = require("mongodb");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -12,6 +12,11 @@ export default async (req, res) => {
   const { endpoint } = query; // Add an endpoint query parameter to handle different collections
 
   switch (endpoint) {
+    case "check":
+       if (method === "POST"){
+         res.status(201).json("Yikadee");
+       }
+       break;
     case "register":
       // Handle user registration here
       if (method === "POST") {
