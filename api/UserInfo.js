@@ -1,6 +1,7 @@
 const MongoClient = require("../mongo/client.js");
 const { ObjectId } = require("mongodb");
 const bcrypt = require("bcrypt");
+const { generateToken } = require("../utils/jwt");
 const saltRounds = 10;
 
 export default async (req, res) => {
@@ -19,6 +20,7 @@ export default async (req, res) => {
        break;
     case "register":
       // Handle user registration here
+      console.log("I've made it here, to that very critical place")
       if (method === "POST") {
         const { name, email, password } = req.body;
         const existingUser = await db.collection("users").findOne({ email });
