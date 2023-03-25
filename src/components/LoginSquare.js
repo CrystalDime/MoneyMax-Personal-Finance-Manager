@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
@@ -24,29 +24,48 @@ const useStyles = makeStyles((theme) => ({
 function LoginSquare() {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSignIn = () => {
-    navigate("/dashboard");
+  const handleSignIn = async () => {
+    const response = await fetch("/api/UserInfo?endpoint=login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body:
+      JSON.stringify({ email, password }),
+    });
+
+    if (response.ok) {
+      const { token } = await response.json();
+      localStorage.setItem("token", token);
+      navigate("/dashboard");
+    } else {
+      alert("Error signing in. Please check your email and password.");
+    }
   };
 
   return (
-    <Paper className={classes.paper}>
+    <Paper className={classes.paper} component="form" onSubmit={(e) => { e.preventDefault(); handleSignIn(); }}>
       <TextField
         className={classes.textField}
         label="Email"
         variant="outlined"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
       />
       <TextField
         className={classes.textField}
         label="Password"
         type="password"
         variant="outlined"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
       />
       <Button
+        type="submit"
         className={classes.button}
         variant="contained"
         color="primary"
-        onClick={handleSignIn}
       >
         Sign in
       </Button>
