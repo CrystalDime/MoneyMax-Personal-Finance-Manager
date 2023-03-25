@@ -4,7 +4,7 @@ const { ObjectId } = require("mongodb");
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
 
-module.exports = async (req, res) => {
+export default UserInfoFunc = async (req, res) => {
   console.log("Function started");
   
   try {
