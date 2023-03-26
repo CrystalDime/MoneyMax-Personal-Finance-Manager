@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext} from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Grid, makeStyles } from "@material-ui/core";
 import FinancialOverview from "../components/FinancialOverview";
 import RecentTransactions from "../components/RecentTransactions";
@@ -8,7 +8,6 @@ import MonthlyTrend from "../components/MonthlyTrend";
 import Header from "../components/Header";
 import VerticalNavBar from "../components/VerticalNavBar";
 import DashboardDataContext from "../contexts/DashboardDataContext";
-import UserIdContext from "../contexts/UserIdContext";
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -24,13 +23,10 @@ function DashboardPage() {
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [savingsGoals, setSavingsGoals] = useState([]);
-  const { userId } = useContext(UserIdContext);
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
-    // Replace with the correct API endpoint and add the user ID as a query parameter
-
     const dashboardDataApiUrl = `/api/UserInfo?endpoint=fetch_dashboard_data&userId=${userId}`;
-
 
     const fetchData = async () => {
       const response = await fetch(dashboardDataApiUrl);
@@ -51,13 +47,13 @@ function DashboardPage() {
         <Container maxWidth="lg">
           <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
-              <FinancialOverview title = "totalIncome"/>
+              <FinancialOverview title="totalIncome" />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FinancialOverview  title = "totalExpenses"/>
+              <FinancialOverview title="totalExpenses" />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <FinancialOverview title = "netSavings" />
+              <FinancialOverview title="netSavings" />
             </Grid>
             <Grid item xs={12}>
               <RecentTransactions />

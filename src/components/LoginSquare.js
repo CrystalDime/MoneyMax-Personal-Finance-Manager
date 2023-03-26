@@ -1,11 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
-import UserIdContext from "../contexts/UserIdContext";
-
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 function LoginSquare() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { userId, setUserId } = useContext(UserIdContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -39,7 +36,7 @@ function LoginSquare() {
 
     if (response.ok) {
       const { user } = await response.json();
-      setUserId(user._id);
+      localStorage.setItem("userId", user._id);
       navigate("/dashboard");
     } else {
       alert("Error signing in. Please check your email and password.");
