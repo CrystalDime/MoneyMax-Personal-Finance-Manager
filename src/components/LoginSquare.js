@@ -38,7 +38,7 @@ function LoginSquare() {
 
     if (response.ok) {
       const { token,user } = await response.json();
-      localStorage.setItem("userID", user.id);
+      localStorage.setItem("userID", new ObjectId(user.id));
       
       navigate("/dashboard");
     } else {
