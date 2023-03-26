@@ -81,8 +81,27 @@ export default async function UserInfo(req, res) {
         break;
 
       case "incomes":
-        // Handle income-related operations here
-        break;
+              if (method === "GET") {
+        const { userId } = req.query;
+
+        // Fetch incomes
+        const incomes = await db
+          .collection("incomes")
+          .find({ userId: new ObjectId(userId) })
+          .toArray();
+
+        res.status(200).json(incomes);
+      } else if (method === "POST") {
+        const { userId } = req.query;
+        const incomeData = req.body;
+
+        await db.collection("incomes").insertOne({ ...incomeData, userId: new ObjectId(userId) });
+
+        res.status(201).json({ message: "Income added successfully" });
+      } else {
+        res.status(405).end(`Method ${method} Not Allowed`);
+      }
+      break;
 
       case "expenses":
         // Handle expense-related operations here

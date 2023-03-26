@@ -59,9 +59,9 @@ function DashboardPage() {
               <RecentTransactions />
             </Grid>
             <Grid item xs={12} sm={6}>
-                {savingsGoals.map((goal) => (
-                     <SavingsGoalsProgress key={goal.title} goalTitle={goal.title} progress={goal.progress} />
-                 ))}
+              {savingsGoals.map((goal) => (
+                <SavingsGoalsProgress key={goal._id} goal={goal} />
+              ))}
             </Grid>
             <Grid item xs={12} sm={6}>
               <SpendingOverview />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   TableContainer,
   Paper,
@@ -12,7 +12,21 @@ import {
 import { Edit, Delete } from "@material-ui/icons";
 
 function IncomeList() {
-  const incomes = []; // Fetch income data from a backend service
+ const [incomes, setIncomes] = useState([]);
+  const userId = localStorage.getItem("userId");
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+  };
+  useEffect(() => {
+    const fetchIncomes = async () => {
+      const response = await fetch(`/api/UserInfo?endpoint=incomes&userId=${userId}`);
+      const data = await response.json();
+      setIncomes(data);
+    };
+
+    fetchIncomes();
+  }, []);
 
   return (
     <TableContainer component={Paper}>
@@ -26,15 +40,15 @@ function IncomeList() {
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+       <TableBody>
           {incomes.map((income) => (
-            <TableRow key={income.id}>
-              <TableCell>{income.date}</TableCell>
+            <TableRow key={income._id}>
+              <TableCell>{formatDate(income.date)}</TableCell>
               <TableCell>{income.description}</TableCell>
               <TableCell>{income.category}</TableCell>
               <TableCell>{income.amount}</TableCell>
               <TableCell>
-                <IconButton>
+                  <IconButton>
                   <Edit />
                 </IconButton>
                 <IconButton>

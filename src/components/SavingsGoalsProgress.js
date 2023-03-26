@@ -1,20 +1,16 @@
-import React, { useContext } from "react";
+import React from "react";
 import { CircularProgress, Typography } from "@material-ui/core";
-import DashboardDataContext from "../contexts/DashboardDataContext";
 
-function SavingsGoalsProgress({ goalTitle, progress }) {
-  const { savingsGoals } = useContext(DashboardDataContext);
-  const goal = savingsGoals.find((goal) => goal.title === goalTitle);
-  
-  if (!goal) {
-    return null;
-  }
+function SavingsGoalsProgress({ goal }) {
+  const progress = Math.min(Math.floor((goal.currentAmount / goal.targetAmount) * 100), 100);
 
   return (
     <div>
       <Typography variant="h6">{goal.title}</Typography>
-      <CircularProgress variant="determinate" value={goal.progress} />
-      <Typography variant="subtitle1">{goal.progress}%</Typography>
+      <CircularProgress variant="determinate" value={progress} />
+      <Typography variant="subtitle1">
+        {progress}% ({goal.currentAmount} / {goal.targetAmount})
+      </Typography>
     </div>
   );
 }

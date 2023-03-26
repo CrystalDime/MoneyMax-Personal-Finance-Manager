@@ -13,11 +13,20 @@ function AddIncomeModal({ open, handleClose }) {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
+  const [incomeData, setIncomeData] = useState({ date: "", description: "", category: "", amount: "" });
+  const userId = localStorage.getItem("userId");
 
-  const handleSubmit = () => {
-    // Save the new income
+  const handleSubmit = async () => {
+    await fetch(`/api/UserInfo?endpoint=incomes&userId=${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(incomeData),
+    });
     handleClose();
   };
+
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
