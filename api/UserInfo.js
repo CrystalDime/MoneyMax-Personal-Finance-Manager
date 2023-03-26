@@ -32,27 +32,26 @@ export default async function UserInfo(req, res) {
 
       case "login":
         // Handle user login here
-        if (method === "POST") {
-          const { email, password } = req.body;
-          const user = await db.collection("users").findOne({ email });
+            if (method === "POST") {
+              const { email, password } = req.body;
+              const user = await db.collection("users").findOne({ email });
 
-          if (!user) {
-            res.status(404).json({ message: "User not found" });
-          } else {
-            const isPasswordCorrect = password === user.password;
+              if (!user) {
+                res.status(404).json({ message: "User not found" });
+              } else {
+                const isPasswordCorrect = password === user.password;
 
-            if (isPasswordCorrect) {
-              const token = "token";
-              res.status(200).json(user);
+                if (isPasswordCorrect) {
+                  const token = "token";
+                  res.status(200).json({ user: { _id: user._id } });
+                } else {
+                  res.status(401).json({ message: "Invalid credentials" });
+                }
+              }
             } else {
-              res.status(401).json({ message: "Invalid credentials" });
+              res.status(405).end(`Method ${method} Not Allowed`);
             }
-          }
-        } else {
-          res.status(405).end(`Method ${method} Not Allowed`);
-        }
-        break;
-
+            break;
       case "register":
         console.log("Entering register case");
         if (method === "POST") {
