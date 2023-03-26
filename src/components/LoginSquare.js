@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,8 +37,9 @@ function LoginSquare() {
     });
 
     if (response.ok) {
-      const { token } = await response.json();
-      localStorage.setItem("token", token);
+      const { token,user } = await response.json();
+      localStorage.setItem("userID", user.id);
+      
       navigate("/dashboard");
     } else {
       alert("Error signing in. Please check your email and password.");
