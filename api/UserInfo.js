@@ -43,7 +43,7 @@ export default async function UserInfo(req, res) {
 
             if (isPasswordCorrect) {
               const token = "token";
-              res.status(200).json({ token, user: { id: user._id, name: user.name, email: user.email } });
+              res.status(200).json({ token, user: { id: user.id, name: user.name, email: user.email } });
             } else {
               res.status(401).json({ message: "Invalid credentials" });
             }
