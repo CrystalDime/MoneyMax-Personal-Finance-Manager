@@ -1,34 +1,18 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
-import { ObjectId } from 'mongodb';
-
-const saltRounds = 10;
-const jwtSecret = process.env.JWT_SECRET;
-
-const username = encodeURIComponent('devontay');
-const password = encodeURIComponent('eluett');
-const uri = `mongodb+srv://${username}:${password}@moneymax.1edvk23.mongodb.net/?retryWrites=true&w=majority`;
-console.log(username);
-console.log(password);
 
 
 
 
 
 
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-  const collection = client.db("UserInfo").collection("users");
-  // perform actions on the collection object
-  client.close();
-});
+
+
+
 
 export default function UserInfo (req, res) {
   console.log("Function started");
   
   try {
-    await client.connect(); // Modify this line
-    const db = client.db("UserInfo");
-  
+   
     const { method, query } = req;
     const { endpoint } = query;
   
@@ -82,5 +66,6 @@ export default function UserInfo (req, res) {
   } finally {
     console.log("Function finished");
   }
+  return;
 };
 
