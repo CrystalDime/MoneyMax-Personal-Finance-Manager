@@ -1,2 +1,4 @@
 # MoneyMax-Personal-Finance-Manager
-Created with CodeSandbox
+
+user3@example.com
+Test account: hashedPassword3
