@@ -104,12 +104,54 @@ export default async function UserInfo(req, res) {
       break;
 
       case "expenses":
-        // Handle expense-related operations here
+         if (method === "GET") {
+            const { userId } = req.query;
+
+            // Fetch expenses
+            const expenses = await db
+              .collection("expenses")
+              .find({ userId: new ObjectId(userId) })
+              .toArray();
+
+            res.status(200).json(expenses);
+        } else if (method === "POST") {
+            const { userId } = req.query;
+            const expenseData = req.body;
+
+            await db.collection("expenses").insertOne({ ...expenseData, userId: new ObjectId(userId) });
+
+            res.status(201).json({ message: "Expense added successfully" });
+        } else {
+            res.status(405).end(`Method ${method} Not Allowed`);
+        }
         break;
+  
 
       case "savings_goals":
-        // Handle savings goal-related operations here
-        break;
+          if (method === "GET") {
+              const { userId } = req.query;
+
+              // Fetch savings goals
+              const savingsGoals = await db
+                .collection("savings_goals")
+                .find({ userId: new ObjectId(userId) })
+                .toArray();
+
+              res.status(200).json(savingsGoals);
+          } else if (method === "POST") {
+            const { userId } = req.query;
+              const savingsGoalData = req.body;
+
+              await db.collection("savings_goals").insertOne({
+                ...savingsGoalData,
+                userId: new ObjectId(userId),
+              });
+
+              res.status(201).json({ message: "Savings goal added successfully" });
+          } else {
+            res.status(405).end(`Method ${method} Not Allowed`);
+          }
+          break;
       case "fetch_dashboard_data":
         if (method === "GET") {
           const { userId } = req.query;

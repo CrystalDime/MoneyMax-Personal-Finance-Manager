@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   TableContainer,
   Paper,
@@ -12,7 +12,24 @@ import {
 import { Edit, Delete } from "@material-ui/icons";
 
 function ExpensesList() {
-  const expenses = []; // Fetch expenses data from a backend service
+  const [userId, setUserId] = useState(null);
+  const [expenses, setExpenses] = useState([]);
+
+  useEffect(() => {
+    setUserId(localStorage.getItem("userId"));
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      fetchExpenses();
+    }
+  }, [userId]);
+
+  const fetchExpenses = async () => {
+    const response = await fetch(`/api/UserInfo?endpoint=expenses&userId=${userId}`);
+    const data = await response.json();
+    setExpenses(data);
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -28,7 +45,7 @@ function ExpensesList() {
         </TableHead>
         <TableBody>
           {expenses.map((expense) => (
-            <TableRow key={expense.id}>
+            <TableRow key={expense._id}>
               <TableCell>{expense.date}</TableCell>
               <TableCell>{expense.description}</TableCell>
               <TableCell>{expense.category}</TableCell>

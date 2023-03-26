@@ -9,12 +9,20 @@ import {
 } from "@material-ui/core";
 
 function AddIncomeModal({ open, handleClose }) {
-  const [date, setDate] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [amount, setAmount] = useState("");
-  const [incomeData, setIncomeData] = useState({ date: "", description: "", category: "", amount: "" });
+  const [incomeData, setIncomeData] = useState({
+    date: "",
+    description: "",
+    category: "",
+    amount: ""
+  });
   const userId = localStorage.getItem("userId");
+
+  const handleChange = (e) => {
+    setIncomeData({
+      ...incomeData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async () => {
     await fetch(`/api/UserInfo?endpoint=incomes&userId=${userId}`, {
@@ -27,7 +35,6 @@ function AddIncomeModal({ open, handleClose }) {
     handleClose();
   };
 
-
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
       <DialogTitle>Add Income</DialogTitle>
@@ -36,35 +43,39 @@ function AddIncomeModal({ open, handleClose }) {
           autoFocus
           margin="dense"
           label="Date"
+          name="date"
           type="date"
           fullWidth
           InputLabelProps={{ shrink: true }}
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          value={incomeData.date}
+          onChange={handleChange}
         />
         <TextField
           margin="dense"
           label="Description"
+          name="description"
           type="text"
           fullWidth
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={incomeData.description}
+          onChange={handleChange}
         />
         <TextField
           margin="dense"
           label="Category"
+          name="category"
           type="text"
           fullWidth
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={incomeData.category}
+          onChange={handleChange}
         />
         <TextField
           margin="dense"
           label="Amount"
+          name="amount"
           type="number"
           fullWidth
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          value={incomeData.amount}
+          onChange={handleChange}
         />
       </DialogContent>
       <DialogActions>

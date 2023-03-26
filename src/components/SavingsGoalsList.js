@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Paper,
@@ -23,9 +23,25 @@ const useStyles = makeStyles((theme) => ({
 
 function SavingsGoalsList() {
   const classes = useStyles();
-  const goals = []; // Fetch goals data from a backend service
+  const [userId, setUserId] = useState(null);
+  const [goals, setGoals] = useState([]);
 
-  return (
+  useEffect(() => {
+    setUserId(localStorage.getItem("userId"));
+  }, []);
+
+  useEffect(() => {
+    if (userId) {
+      fetchSavingsGoals();
+    }
+  }, [userId]);
+
+  const fetchSavingsGoals = async () => {
+    const response = await fetch(`/api/UserInfo?endpoint=savings_goals&userId=${userId}`);
+    const data = await response.json();
+    setGoals(data);
+  };
+ return (
     <Grid container spacing={3}>
       {goals.map((goal) => (
         <Grid item xs={12} sm={6} md={4} key={goal.id}>
@@ -50,7 +66,8 @@ function SavingsGoalsList() {
         </Grid>
       ))}
     </Grid>
-  );
+  );t
 }
 
 export default SavingsGoalsList;
+

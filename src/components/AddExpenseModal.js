@@ -9,13 +9,29 @@ import {
 } from "@material-ui/core";
 
 function AddExpenseModal({ open, handleClose }) {
-  const [date, setDate] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [amount, setAmount] = useState("");
+  const [expenseData, setExpenseData] = useState({
+    date: "",
+    description: "",
+    category: "",
+    amount: ""
+  });
+  const userId = localStorage.getItem("userId");
 
-  const handleSubmit = () => {
-    // Save the new expense
+  const handleChange = (e) => {
+    setExpenseData({
+      ...expenseData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async () => {
+    await fetch(`/api/UserInfo?endpoint=expenses&userId=${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(expenseData),
+    });
     handleClose();
   };
 
@@ -27,35 +43,39 @@ function AddExpenseModal({ open, handleClose }) {
           autoFocus
           margin="dense"
           label="Date"
+          name="date"
           type="date"
           fullWidth
           InputLabelProps={{ shrink: true }}
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
+          value={expenseData.date}
+          onChange={handleChange}
         />
         <TextField
           margin="dense"
           label="Description"
+          name="description"
           type="text"
           fullWidth
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={expenseData.description}
+          onChange={handleChange}
         />
         <TextField
           margin="dense"
           label="Category"
+          name="category"
           type="text"
           fullWidth
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={expenseData.category}
+          onChange={handleChange}
         />
         <TextField
           margin="dense"
           label="Amount"
+          name="amount"
           type="number"
           fullWidth
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          value={expenseData.amount}
+          onChange={handleChange}
         />
       </DialogContent>
       <DialogActions>

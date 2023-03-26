@@ -12,9 +12,18 @@ function AddSavingsGoalModal({ open, handleClose }) {
   const [title, setTitle] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [currentAmount, setCurrentAmount] = useState("");
+  const userId = localStorage.getItem("userId");
 
-  const handleSubmit = () => {
-    // Save the new savings goal
+  const handleSubmit = async () => {
+    const savingsGoalData = { title, targetAmount, currentAmount };
+
+    await fetch(`/api/UserInfo?endpoint=savings_goals&userId=${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(savingsGoalData),
+    });
     handleClose();
   };
 
