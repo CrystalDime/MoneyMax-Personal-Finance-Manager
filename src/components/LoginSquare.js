@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { useNavigate } from "react-router-dom";
+import UserIdContext from "../contexts/UserIdContext";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 function LoginSquare() {
   const classes = useStyles();
   const navigate = useNavigate();
+  const { userId, setUserId } = useContext(UserIdContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -32,14 +34,12 @@ function LoginSquare() {
     const response = await fetch("/api/UserInfo?endpoint=login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body:
-      JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password }),
     });
 
     if (response.ok) {
-      const { token,user } = await response.json();
-      localStorage.setItem("userID", user.id);
-      
+      const { token, user } = await response.json();
+      setUserId(user.id);
       navigate("/dashboard");
     } else {
       alert("Error signing in. Please check your email and password.");

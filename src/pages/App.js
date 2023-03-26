@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, Typography } from "@material-ui/core";
@@ -12,6 +12,7 @@ import ExpensesPage from "../pages/ExpensesPage";
 import IncomePage from "../pages/IncomePage";
 import ReportsPage from "../pages/ReportsPage";
 import SavingsGoalsPage from "../pages/SavingsGoalsPage";
+import UserIdContext from "../contexts/UserIdContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,29 +31,34 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
+  
+  const [userId, setUserId] = useState(null);
 
   return (
-    <Router>
-      <div className={classes.root}>
-        <AppBar position="static" className={classes.appBar}>
-          <Toolbar>
-            <Typography variant="h6" className={classes.title}>
-              MoneyMax
-            </Typography>
-          </Toolbar>
-        </AppBar>
+    <UserIdContext.Provider value={{ userId, setUserId }}>
+      
+      <Router>
+        <div className={classes.root}>
+          <AppBar position="static" className={classes.appBar}>
+            <Toolbar>
+              <Typography variant="h6" className={classes.title}>
+                MoneyMax
+              </Typography>
+            </Toolbar>
+          </AppBar>
 
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/expenses" element={<ExpensesPage />} />
-          <Route path="/income" element={<IncomePage />} />
-          <Route path="/reports" element={<ReportsPage />} />
-          <Route path="/savingsgoals" element={<SavingsGoalsPage />} />
-        </Routes>
-      </div>
-    </Router>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/expenses" element={<ExpensesPage />} />
+            <Route path="/income" element={<IncomePage />} />
+            <Route path="/reports" element={<ReportsPage />} />
+            <Route path="/savingsgoals" element={<SavingsGoalsPage />} />
+          </Routes>
+        </div>
+      </Router>
+    </UserIdContext.Provider>
   );
 }

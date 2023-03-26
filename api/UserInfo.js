@@ -95,7 +95,7 @@ export default async function UserInfo(req, res) {
       case "fetch_dashboard_data":
         if (method === "GET") {
           const { userId } = req.query;
-
+          console.log("here")
           // Fetch incomes
           const incomes = await db
             .collection("incomes")
