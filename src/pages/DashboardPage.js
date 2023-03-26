@@ -27,7 +27,7 @@ function DashboardPage() {
   useEffect(() => {
     // Replace with the correct API endpoint and add the user ID as a query parameter
     const userID = localStorage.getItem("userID");
-    const dashboardDataApiUrl = `/api/Userinfo?endpoint=fetch_dashboard_data&userId=${userID}`;
+    const dashboardDataApiUrl = `/api/UserInfo?endpoint=fetch_dashboard_data&userId=${userID}`;
 
 
     const fetchData = async () => {
