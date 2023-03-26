@@ -59,7 +59,9 @@ function DashboardPage() {
               <RecentTransactions />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <SavingsGoalsProgress goalTitle="Emergency Fund" progress={75} />
+                {savingsGoals.map((goal) => (
+                     <SavingsGoalsProgress key={goal.title} goalTitle={goal.title} progress={goal.progress} />
+                 ))}
             </Grid>
             <Grid item xs={12} sm={6}>
               <SpendingOverview />
