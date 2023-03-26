@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Line } from "react-chartjs-2";
 import { Typography } from "@material-ui/core";
+import DashboardDataContext from "../contexts/DashboardDataContext";
+import "chart.js/auto";
 
-const data = {
-  labels: [
+function MonthlyTrend() {
+  const { incomes, expenses } = useContext(DashboardDataContext);
+
+  const months = [
     "January",
     "February",
     "March",
@@ -15,57 +19,46 @@ const data = {
     "September",
     "October",
     "November",
-    "December"
-  ],
-  datasets: [
-    {
-      label: "Sales",
-      data: [
-        4500,
-        5600,
-        6800,
-        6200,
-        7300,
-        8100,
-        9700,
-        10500,
-        12000,
-        14500,
-        17800,
-        20400
-      ],
-      fill: false,
-      borderColor: "#8884d8",
-      tension: 0.2
-    },
-    {
-      label: "Expenses",
-      data: [
-        2500,
-        3200,
-        3900,
-        4400,
-        5000,
-        5500,
-        6100,
-        6800,
-        7200,
-        8200,
-        9200,
-        10300
-      ],
-      fill: false,
-      borderColor: "#82ca9d",
-      tension: 0.2
-    }
-  ]
-};
+    "December",
+  ];
 
-function MonthlyTrend() {
+  const monthlyIncomes = new Array(12).fill(0);
+  const monthlyExpenses = new Array(12).fill(0);
+
+  incomes.forEach((income) => {
+    const month = new Date(income.date).getMonth();
+    monthlyIncomes[month] += income.amount;
+  });
+
+  expenses.forEach((expense) => {
+    const month = new Date(expense.date).getMonth();
+    monthlyExpenses[month] += expense.amount;
+  });
+
+  const data = {
+    labels: months,
+    datasets: [
+      {
+        label: "Sales",
+        data: monthlyIncomes,
+        fill: false,
+        borderColor: "#8884d8",
+        tension: 0.2,
+      },
+      {
+        label: "Expenses",
+        data: monthlyExpenses,
+        fill: false,
+        borderColor: "#82ca9d",
+        tension: 0.2,
+      },
+    ],
+  };
+
   return (
     <div>
       <Typography variant="h6">Monthly Trend</Typography>
-      <Line data={data} />
+      {data.labels.length > 0 && <Line data={data} />}
     </div>
   );
 }

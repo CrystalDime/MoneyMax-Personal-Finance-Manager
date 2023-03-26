@@ -32,7 +32,7 @@ function SpendingOverview() {
 return (
 <div>
 <Typography variant="h6">Spending Overview</Typography>
-<Pie data={data} />
+  {data.labels.length > 0 && <Pie data={data} />}
 </div>
 );
 }
