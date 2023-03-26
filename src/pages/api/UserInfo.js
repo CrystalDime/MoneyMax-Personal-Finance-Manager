@@ -1,5 +1,6 @@
-const MongoClient = require("../mongo/client.js");
+const { MongoClient } = require('mongodb');
 const { ObjectId } = require("mongodb");
+
 
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
@@ -7,13 +8,11 @@ const jwtSecret = process.env.JWT_SECRET;
 const uri = "mongodb+srv://deluett1@gmail.com:Nanaosaki12@moneymax.1edvk23.mongodb.net/?retryWrites=true&w=majority"
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-
 export default UserInfoFunc = async (req, res) => {
   console.log("Function started");
   
   try {
-    const client = await MongoClient();
-    await client.connect();
+    await client.connect(); // Modify this line
     const db = client.db("UserInfo");
   
     const { method, query } = req;
@@ -37,11 +36,11 @@ export default UserInfoFunc = async (req, res) => {
           if (existingUser) {
             res.status(409).json({ message: "Email already exists" });
           } else {
-            const hashedPassword = password
+            // Modify this line
             const newUser = await db.collection("users").insertOne({
               name,
               email,
-              password: hashedPassword,
+              password: password,
             });
   
             const token = "token"
