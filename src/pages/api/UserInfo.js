@@ -1,87 +1,90 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
-import { ObjectId } from 'mongodb';
+import { useState } from "react";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core/styles";
 
-const saltRounds = 10;
-const jwtSecret = process.env.JWT_SECRET;
-
-const username = encodeURIComponent('devontay');
-const password = encodeURIComponent('eluett');
-const uri = `mongodb+srv://${username}:${password}@moneymax.1edvk23.mongodb.net/?retryWrites=true&w=majority`;
-console.log(username);
-console.log(password);
-
-
-
-
-
-
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-client.connect(err => {
-  const collection = client.db("UserInfo").collection("users");
-  // perform actions on the collection object
-  client.close();
-});
-
-const UserInfo = async (req, res) => {
-  console.log("Function started");
-  
-  try {
-    await client.connect(); // Modify this line
-    const db = client.db("UserInfo");
-  
-    const { method, query } = req;
-    const { endpoint } = query;
-  
-    console.log(`Endpoint: ${endpoint}`);
-    console.log(method);
-    console.log(req);
-    switch (endpoint) {
-      case "check":
-        console.log("Entering check case");
-        if (method === "GET") {
-          res.status(201).json("Yikadee");
-        }
-        break;
-      case "register":
-        console.log("Entering register case");
-        if (method === "POST") {
-          const { name, email, password } = req.body;
-          const existingUser = await db.collection("users").findOne({ email });
-  
-          if (existingUser) {
-            res.status(409).json({ message: "Email already exists" });
-          } else {
-            // Modify this line
-            const newUser = await db.collection("users").insertOne({
-              name,
-              email,
-              password: password,
-            });
-  
-            const token = "token"
-  
-            res.status(201).json({ token, user: { name, email } });
-          }
-        } else {
-          res.status(405).end(`Method ${method} Not Allowed`);
-        }
-        break;
-  
-      // ... rest of the cases
-  
-      default:
-        res.status(400).json({ message: "Invalid endpoint" });
-        client.close();
-        return;
-    }
-  
-    // ... rest of the code
-  } catch (error) {
-    console.error("Error occurred:", error);
-    res.status(500).json({ message: "Internal server error" });
-  } finally {
-    console.log("Function finished");
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(4),
+    borderRadius: theme.spacing(1)
+  },
+  textField: {
+    width: "100%",
+    marginBottom: theme.spacing(2)
+  },
+  button: {
+    width: "100%",
+    marginTop: theme.spacing(2)
   }
-};
+}));
 
-export default UserInfo
+function SignUpSquare() {
+  const classes = useStyles();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    const response = await fetch("https://${process.env.VERCEL_URL}/api/UserInfo?endpoint=register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    if (response.ok) {
+      alert("Account created successfully!");
+    } else {
+      alert("Error creating account. Please try again.");
+    }
+  };
+
+  return (
+    <Paper className={classes.paper} component="form" onSubmit={handleSubmit}>
+      <TextField
+        label="Full Name"
+        className={classes.textField}
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextField
+        label="Email"
+        className={classes.textField}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        label="Password"
+        type="password"
+        className={classes.textField}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <TextField
+        label="Confirm Password"
+        type="password"
+        className={classes.textField}
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        className={classes.button}
+      >
+        Sign Up
+      </Button>
+    </Paper>
+  );
+}
+
+export default SignUpSquare;
