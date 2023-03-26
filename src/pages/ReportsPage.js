@@ -1,49 +1,81 @@
-import React from "react";
-import { Container, Grid } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { Container, Grid, makeStyles } from "@material-ui/core";
 import Header from "../components/Header";
 import VerticalNavBar from "../components/VerticalNavBar";
-import ReportsCharts from "../components/ReportsCharts";
-import ReportsFilters from "../components/ReportsFilters";
-
-import { makeStyles } from "@material-ui/core/styles";
+import SavingsGoalsProgressReport from "../components/SavingsGoalsProgressReport";
+import IncomeCategoriesPieChart from "../components/IncomeCategoriesPieChart";
+import ExpenseCategoriesPieChart from "../components/ExpenseCategoriesPieChart";
 
 const useStyles = makeStyles((theme) => ({
   content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
     marginTop: theme.spacing(4),
-    paddingLeft: theme.spacing(15) + 1, // Set the paddingLeft to match the width of the navbar
-    height: "100%"
+    marginLeft: theme.spacing(25),
   },
-  navbar: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: theme.spacing(9) + 1 // Set the width of the navbar
-  }
 }));
+
+function extractCategoriesData(data) {
+  const categoriesData = data.reduce((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = 0;
+    }
+    acc[item.category] += item.amount;
+    return acc;
+  }, {});
+
+  return Object.entries(categoriesData).map(([category, amount]) => ({
+    category,
+    amount,
+  }));
+}
 
 function ReportsPage() {
   const classes = useStyles();
+  const [incomes, setIncomes] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [savingsGoals, setSavingsGoals] = useState([]);
+  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    const dashboardDataApiUrl = `/api/UserInfo?endpoint=fetch_dashboard_data&userId=${userId}`;
+
+    const fetchData = async () => {
+      const response = await fetch(dashboardDataApiUrl);
+      const data = await response.json();
+      setIncomes(data.incomes);
+      setExpenses(data.expenses);
+      setSavingsGoals(data.savingsGoals);
+    };
+
+    fetchData();
+  }, []);
+
+  const incomeCategoriesData = extractCategoriesData(incomes);
+  const expenseCategoriesData = extractCategoriesData(expenses);
+
   return (
     <>
       <Header />
-      <div className={classes.navbar}>
-        <VerticalNavBar />
-      </div>
-      <div className={classes.content}>
-        <Container maxWidth="lg" height="100%">
+      <VerticalNavBar />
+      <main className={classes.content}>
+        <Container maxWidth="lg">
           <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <ReportsFilters />
+            <Grid item xs={12} sm={4}>
+              <SavingsGoalsProgressReport goals={savingsGoals} />
             </Grid>
-            <Grid item xs={12}>
-              <ReportsCharts />
+            <Grid item xs={12} sm={4}>
+              <IncomeCategoriesPieChart incomeCategoriesData={incomeCategoriesData} />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <ExpenseCategoriesPieChart expenseCategoriesData={expenseCategoriesData} />
             </Grid>
           </Grid>
         </Container>
-      </div>
+      </main>
     </>
   );
 }
 
 export default ReportsPage;
+

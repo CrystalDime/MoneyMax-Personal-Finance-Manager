@@ -71,6 +71,7 @@ function Header() {
   };
 
   const handleSignOut = () => {
+    localStorage.setItem("userId", null);
     navigate("/");
   };
 
