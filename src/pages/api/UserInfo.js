@@ -4,6 +4,10 @@ const { ObjectId } = require("mongodb");
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
 
+const uri = "mongodb+srv://deluett1@gmail.com:Nanaosaki12@moneymax.1edvk23.mongodb.net/?retryWrites=true&w=majority"
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+
 export default UserInfoFunc = async (req, res) => {
   console.log("Function started");
   
