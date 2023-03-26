@@ -1,23 +1,34 @@
+import { MongoClient, ServerApiVersion } from 'mongodb';
+import { ObjectId } from 'mongodb';
+
+
+const username = encodeURIComponent('devontay');
+const password = encodeURIComponent('eluett');
+const uri = `mongodb+srv://${username}:${password}@moneymax.1edvk23.mongodb.net/?retryWrites=true&w=majority`;
+console.log(username);
+console.log(password);
 
 
 
 
 
 
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 
-
-
-export default function UserInfo (req, res) {
+export default async function UserInfo(req, res) {
   console.log("Function started");
   
   try {
-   
+    await client.connect(); // Modify this line
+    const db = client.db("UserInfo");
+  
     const { method, query } = req;
     const { endpoint } = query;
   
-    
-
+    console.log(`Endpoint: ${endpoint}`);
+    console.log(method);
+    console.log(req);
     switch (endpoint) {
       case "check":
         console.log("Entering check case");
@@ -29,13 +40,21 @@ export default function UserInfo (req, res) {
         console.log("Entering register case");
         if (method === "POST") {
           const { name, email, password } = req.body;
-         
+          const existingUser = await db.collection("users").findOne({ email });
   
           if (existingUser) {
             res.status(409).json({ message: "Email already exists" });
           } else {
             // Modify this line
-
+            const newUser = await db.collection("users").insertOne({
+              name,
+              email,
+              password: password,
+            });
+  
+            const token = "token"
+  
+            res.status(201).json({ token, user: { name, email } });
           }
         } else {
           res.status(405).end(`Method ${method} Not Allowed`);
@@ -46,7 +65,7 @@ export default function UserInfo (req, res) {
   
       default:
         res.status(400).json({ message: "Invalid endpoint" });
-       
+        client.close();
         return;
     }
   
@@ -57,6 +76,5 @@ export default function UserInfo (req, res) {
   } finally {
     console.log("Function finished");
   }
-  return;
 };
 
