@@ -1,14 +1,28 @@
-const { MongoClient } = require('mongodb');
-const { ObjectId } = require("mongodb");
-
+import { MongoClient, ServerApiVersion } from 'mongodb';
+import { ObjectId } from 'mongodb';
 
 const saltRounds = 10;
 const jwtSecret = process.env.JWT_SECRET;
 
-const uri = "mongodb+srv://deluett1@gmail.com:Nanaosaki12@moneymax.1edvk23.mongodb.net/?retryWrites=true&w=majority"
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const username = encodeURIComponent('devontay');
+const password = encodeURIComponent('eluett');
+const uri = `mongodb+srv://${username}:${password}@moneymax.1edvk23.mongodb.net/?retryWrites=true&w=majority`;
+console.log(username);
+console.log(password);
 
-export default UserInfoFunc = async (req, res) => {
+
+
+
+
+
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+client.connect(err => {
+  const collection = client.db("UserInfo").collection("users");
+  // perform actions on the collection object
+  client.close();
+});
+
+const UserInfo = async (req, res) => {
   console.log("Function started");
   
   try {
@@ -19,11 +33,12 @@ export default UserInfoFunc = async (req, res) => {
     const { endpoint } = query;
   
     console.log(`Endpoint: ${endpoint}`);
-  
+    console.log(method);
+    console.log(req);
     switch (endpoint) {
       case "check":
         console.log("Entering check case");
-        if (method === "POST") {
+        if (method === "GET") {
           res.status(201).json("Yikadee");
         }
         break;
@@ -68,3 +83,5 @@ export default UserInfoFunc = async (req, res) => {
     console.log("Function finished");
   }
 };
+
+export default UserInfo

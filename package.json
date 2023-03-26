@@ -9,15 +9,18 @@
     "@material-ui/icons": "4.11.3",
     "@material-ui/private-theming": "5.0.0-alpha.33",
     "atlas": "^1.0.0-alpha.0",
+    "axios": "^1.3.4",
     "chart.js": "4.2.1",
     "framer-motion": "10.8.5",
     "loader-utils": "3.2.1",
+    "mongodb": "^5.1.0",
     "react": "18.2.0",
     "react-chartjs-2": "5.2.0",
     "react-dom": "18.2.0",
     "react-router-dom": "6.9.0",
     "react-scripts": "5.0.1",
-    "recharts": "2.5.0"
+    "recharts": "2.5.0",
+    "vercel-node-server": "^2.2.1"
   },
   "devDependencies": {
     "@babel/runtime": "7.13.8",
