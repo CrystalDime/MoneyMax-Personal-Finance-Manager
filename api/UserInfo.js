@@ -92,6 +92,33 @@ export default async function UserInfo(req, res) {
       case "savings_goals":
         // Handle savings goal-related operations here
         break;
+      case "fetch_dashboard_data":
+        if (method === "GET") {
+          const { userId } = req.query;
+
+          // Fetch incomes
+          const incomes = await db
+            .collection("incomes")
+            .find({ userId: new ObjectId(userId) })
+            .toArray();
+
+          // Fetch expenses
+          const expenses = await db
+            .collection("expenses")
+            .find({ userId: new ObjectId(userId) })
+            .toArray();
+
+          // Fetch savings goals
+          const savingsGoals = await db
+            .collection("savings_goals")
+            .find({ userId: new ObjectId(userId) })
+            .toArray();
+
+          res.status(200).json({ incomes, expenses, savingsGoals });
+        } else {
+          res.status(405).end(`Method ${method} Not Allowed`);
+        }
+        break;
 
       default:
         res.status(400).json({ message: "Invalid endpoint" });

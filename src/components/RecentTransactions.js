@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Paper,
   Table,
@@ -6,43 +6,17 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
-
-const transactions = [
-  {
-    id: 1,
-    date: "2022-03-15",
-    description: "Grocery shopping",
-    amount: 50.25
-  },
-  {
-    id: 2,
-    date: "2022-03-12",
-    description: "Gas station",
-    amount: 20.0
-  },
-  {
-    id: 3,
-    date: "2022-03-10",
-    description: "Online purchase",
-    amount: 75.99
-  },
-  {
-    id: 4,
-    date: "2022-03-08",
-    description: "Restaurant",
-    amount: 35.5
-  },
-  {
-    id: 5,
-    date: "2022-03-05",
-    description: "Movie theater",
-    amount: 12.0
-  }
-];
+import DashboardDataContext from "../contexts/DashboardDataContext";
 
 function RecentTransactions() {
+  const { incomes, expenses } = useContext(DashboardDataContext);
+
+  const transactions = [...incomes, ...expenses]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 5);
+
   return (
     <Paper>
       <Typography variant="h6">Recent Transactions</Typography>
