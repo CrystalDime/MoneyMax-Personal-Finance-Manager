@@ -38,8 +38,8 @@ function LoginSquare() {
     });
 
     if (response.ok) {
-      const { token, user } = await response.json();
-      setUserId(user.id);
+      const { id } = await response.json();
+      setUserId(id);
       navigate("/dashboard");
     } else {
       alert("Error signing in. Please check your email and password.");
